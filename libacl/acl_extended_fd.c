@@ -27,6 +27,10 @@
 #include "byteorder.h"
 #include "acl_ea.h"
 
+#ifdef __APPLE__
+    #define fgetxattr(fd,n,v,s)     fgetxattr((fd),(n),(v),(s),0,0)
+#endif
+
 int
 acl_extended_fd(int fd)
 {

@@ -23,12 +23,25 @@ AC_PREFIX_DEFAULT(/usr)
 AM_INIT_AUTOMAKE([-Wall foreign 1.11 dist-xz subdir-objects])
 AM_SILENT_RULES([yes])
 
+AC_CANONICAL_HOST
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_USE_SYSTEM_EXTENSIONS
 AC_FUNC_GCC_VISIBILITY
 AC_C_BIGENDIAN
 AC_SYS_LARGEFILE
+
+has_version_script=no
+
+# Detect the target system
+case "${host_os}" in
+    linux*)
+        has_version_script=yes
+        ;;
+esac
+
+# Pass the conditionals to automake
+AM_CONDITIONAL([HAS_VERSION_SCRIPT], [test "$has_version_script" = "yes"])
 
 AM_PROG_AR
 LT_INIT
@@ -47,17 +60,26 @@ LT_REVISION=$(echo "${PACKAGE_VERSION}" | tr -d .)
 AC_SUBST(LT_REVISION)
 
 AC_PACKAGE_NEED_ATTR_ERROR_H
-AC_PACKAGE_NEED_GETXATTR_LIBATTR
+case $host_os in
+    darwin*)
+        # getxattr is in libc
+        ;;
+    *)
+        AC_PACKAGE_NEED_GETXATTR_LIBATTR
+        ;;
+esac
 
 AC_CONFIG_COMMANDS([include/acl],
 	[dnl
-	rm -rf include/acl
-	$as_ln_s "$ac_abs_top_srcdir/include" include/acl
+	mkdir -p include/acl
+	rm -f include/acl/*
+	$as_ln_s "$ac_abs_top_srcdir"/include/*.h include/acl
 	])
 AC_CONFIG_COMMANDS([include/sys],
 	[dnl
-	rm -rf include/sys
-	$as_ln_s "$ac_abs_top_srcdir/include" include/sys
+	mkdir -p include/sys
+	rm -f include/sys/*.h
+	$as_ln_s "$ac_abs_top_srcdir/include/acl" include/sys
 	])
 AC_CONFIG_FILES([
 	libacl.pc

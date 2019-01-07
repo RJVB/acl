@@ -40,6 +40,11 @@ static int walk_dir(acl_t acl, acl_t dacl, const char *fname);
 static char *program;
 static int rflag;
 
+#if __APPLE__
+#define dirent64    dirent
+#define readdir64   readdir
+#endif
+
 static void
 usage(void)
 {

@@ -31,6 +31,10 @@
 #include "acl_ea.h"
 
 
+#ifdef __APPLE__
+    #define setxattr(p,n,v,s,f)     setxattr((p),(n),(v),(s),0,(f))
+#endif
+
 /* 23.4.22 */
 int
 acl_set_file(const char *path_p, acl_type_t type, acl_t acl)

@@ -26,6 +26,10 @@
 #include "acl_ea.h"
 #include "libacl.h"
 
+#ifdef __APPLE__
+    #define removexattr(p,n)        removexattr((p),(n),XATTR_SHOWCOMPRESSION)
+#endif
+
 /* 23.4.8 */
 int
 acl_delete_def_file(const char *path_p)

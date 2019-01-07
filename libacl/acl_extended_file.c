@@ -27,9 +27,19 @@
 #include "__acl_extended_file.h"
 
 
+#ifdef __APPLE__
+    static ssize_t _getxattr(const char *path, const char *name, void *value, size_t size)
+    {
+        return getxattr(path, name, value, size, 0, 0);
+    }
+    #define getxattr(p,n,v,s)       _getxattr((p),(n),(v),(s))
+#else
+    #define _getxattr getxattr
+#endif
+
 int
 acl_extended_file(const char *path_p)
 {
-	return __acl_extended_file(path_p, getxattr);
+	return __acl_extended_file(path_p, _getxattr);
 }
 

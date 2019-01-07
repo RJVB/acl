@@ -29,6 +29,10 @@
 #include "acl_ea.h"
 
 
+#ifdef __APPLE__
+    #define fsetxattr(fd,n,v,s,f)   fsetxattr((fd),(n),(v),(s),0,(f))
+#endif
+
 /* 23.4.21 */
 int
 acl_set_fd(int fd, acl_t acl)

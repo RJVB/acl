@@ -31,6 +31,10 @@
 #include "byteorder.h"
 #include "acl_ea.h"
 
+#ifdef __APPLE__
+    #define getxattr(p,n,v,s)      getxattr((p),(n),(v),(s),0,0)
+#endif
+
 /* 23.4.16 */
 acl_t
 acl_get_file(const char *path_p, acl_type_t type)
