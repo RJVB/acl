@@ -77,9 +77,9 @@ AC_CONFIG_COMMANDS([include/acl],
 	])
 AC_CONFIG_COMMANDS([include/sys],
 	[dnl
-	mkdir -p include/sys
-	rm -f include/sys/*.h
-	$as_ln_s "$ac_abs_top_srcdir/include/acl" include/sys
+	mkdir -p include/sys/acl
+	rm -f include/sys/acl/*.h
+	$as_ln_s "$ac_abs_top_srcdir"/include/acl/*.h include/sys/acl
 	])
 AC_CONFIG_FILES([
 	libacl.pc
